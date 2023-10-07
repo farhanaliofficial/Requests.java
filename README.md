@@ -9,7 +9,7 @@ Author: [Farhan Ali](https://github.com/farhanaliofficial)
 
 ### Overview
 
-"Requests" is a lightweight Java HTTP client library that simplifies making HTTP and HTTPS requests. It is designed to provide built-in methods for common HTTP operations and robust error handling.
+Requests is a lightweight and purely sockets-based Java HTTP client library designed for making HTTP and HTTPS requests with ease and reliability. It provides built-in methods for common HTTP operations and robust error handling.
 
 ### Features
 
