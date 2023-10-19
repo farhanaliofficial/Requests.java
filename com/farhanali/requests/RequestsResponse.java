@@ -4,6 +4,7 @@ package com.farhanali.requests;
 Author => Farhan Ali
 GitHub => https://github.com/farhanaliofficial/Requests.java
 Created Date => 07/10/2023
+Last Update => 19/10/2023
 */
 
 import java.util.Map;
@@ -18,9 +19,7 @@ public class RequestsResponse{
 		this.status_code = status_code;
 		this.headers = headers;
 	}
-	public RequestsResponse(){
-
-	}
+	public RequestsResponse(){}
 	public void setContent(String content){
 		this.content = content;
 	}

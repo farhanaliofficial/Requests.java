@@ -4,6 +4,7 @@ package com.farhanali.requests;
 Author => Farhan Ali
 GitHub => https://github.com/farhanaliofficial/Requests.java
 Created Date => 07/10/2023
+Last Update => 19/10/2023
 */
 
 import java.net.URL;
@@ -23,19 +24,18 @@ public class Requests{
 	private String HTTP_POST = "POST";
 	private String HTTP_GET = "GET";
 	private String DEFAULT_PATH = "/";
-	private String VERSION = "1.0.0";
+	private String VERSION = "1.0.1";
 	private String AUTHOR = "Farhan Ali";
 	private String GITHUB = "https://github.com/farhanaliofficial/Requests.java";
+	public static String TERMINATOR = "\r\n";
 	
 	public RequestsResponse request(String method, String url, Map<String, String> headers, Map<String, String> data) throws Exception{
 		URL parsedUrl = new URL(url);
 		String host = parsedUrl.getHost();
 		String path = parsedUrl.getPath().isEmpty() ? this.DEFAULT_PATH : parsedUrl.getPath();
-
-		boolean isConHead = false;
-		boolean isConType = false;
-
 		int port = url.startsWith("https") ? this.HTTPS_PORT : this.HTTP_PORT;
+		
+		boolean isConType = false;
 
 		Socket sock;
 		if(port == this.HTTPS_PORT){
@@ -46,40 +46,24 @@ public class Requests{
 		}
 
 		PrintWriter out = new PrintWriter(sock.getOutputStream());
-		out.printf("%s %s %s\r\n", method, path, this.HTTP);
-		out.printf("Host: %s\r\n", host);
-		out.printf("Accept: */*\r\n");
-
-		for(Map.Entry<String, String> head : headers.entrySet()){
-			if(head.getKey().toLowerCase().equals("connection"))
-				isConHead = true;
-			if(head.getKey().toLowerCase().equals("content-type"))
-				isConType = true;
-			out.printf("%s: %s\r\n", head.getKey(), head.getValue());
-		}
-		if(!isConHead)
-			out.printf("Connection: close\r\n");
+		out.printf("%s %s %s%s", method, path, this.HTTP, this.TERMINATOR);
+		
+		headers.put("host", host);
+		
+		for(Map.Entry<String, String> head : Utils.getCombinedHeaders(headers).entrySet())
+			out.printf("%s: %s%s", head.getKey(), head.getValue(), this.TERMINATOR);
+		
 		if(method.equals(this.HTTP_POST) && !data.isEmpty()){
-			StringBuilder postData = new StringBuilder();
-			for(Map.Entry<String, String> dat : data.entrySet()){
-				if(postData.length() != 0)
-					postData.append("&");
-
-				postData.append(URLEncoder.encode(dat.getKey(), "UTF-8"));
-				postData.append("=");
-				postData.append(URLEncoder.encode(dat.getValue(), "UTF-8"));
-			}
-			out.printf("Content-Length: %s\r\n", postData.toString().getBytes().length);
+			String postData = Utils.buildPostData(data);
+			out.printf("Content-Length: %s%s", postData.getBytes().length, this.TERMINATOR);
 			if(!isConType)
-				out.printf("Content-Type: application/x-www-form-urlencoded\r\n");
-			out.printf("\r\n");
-			out.printf(postData.toString());
+				out.printf("Content-Type: application/x-www-form-urlencoded%s", this.TERMINATOR);
+			out.printf("%s%s", this.TERMINATOR, postData);
 		}else{
-			out.printf("\r\n");
+			out.printf(this.TERMINATOR);
 		}
 
 		out.flush();
-
 		BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		String res = "", line;
 
@@ -91,8 +75,7 @@ public class Requests{
 		out.close();
 		sock.close();
 		RequestsResponseParser parser = new RequestsResponseParser(res);
-		RequestsResponse resp = parser.parse();
-		return resp;
+		return parser.parse();
 	}
 	public RequestsResponse get(String url, Map<String, String> headers) throws Exception{
 		Map<String, String> data = new HashMap<>();
