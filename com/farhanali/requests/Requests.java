@@ -4,7 +4,7 @@ package com.farhanali.requests;
 Author => Farhan Ali
 GitHub => https://github.com/farhanaliofficial/Requests.java
 Created Date => 07/10/2023
-Last Update => 19/10/2023
+Last Update => 20/10/2023
 */
 
 import java.net.URL;
@@ -24,7 +24,7 @@ public class Requests{
 	private String HTTP_POST = "POST";
 	private String HTTP_GET = "GET";
 	private String DEFAULT_PATH = "/";
-	private String VERSION = "1.0.1";
+	private String VERSION = "1.0.2";
 	private String AUTHOR = "Farhan Ali";
 	private String GITHUB = "https://github.com/farhanaliofficial/Requests.java";
 	public static String TERMINATOR = "\r\n";
@@ -50,8 +50,11 @@ public class Requests{
 		
 		headers.put("host", host);
 		
-		for(Map.Entry<String, String> head : Utils.getCombinedHeaders(headers).entrySet())
+		for(Map.Entry<String, String> head : Utils.getCombinedHeaders(headers).entrySet()){
+			if(head.getKey().toLowerCase().equals("content-type"))
+				isConType = true;
 			out.printf("%s: %s%s", head.getKey(), head.getValue(), this.TERMINATOR);
+		}
 		
 		if(method.equals(this.HTTP_POST) && !data.isEmpty()){
 			String postData = Utils.buildPostData(data);
