@@ -4,7 +4,7 @@ package com.farhanali.requests;
 Author => Farhan Ali
 GitHub => https://github.com/farhanaliofficial/Requests.java
 Created Date => 07/10/2023
-Last Update => 20/10/2023
+Last Update => 04/11/2023
 */
 
 import java.net.URL;
@@ -32,7 +32,9 @@ public class Requests{
 	public RequestsResponse request(String method, String url, Map<String, String> headers, Map<String, String> data) throws Exception{
 		URL parsedUrl = new URL(url);
 		String host = parsedUrl.getHost();
+		String query = parsedUrl.getQuery();
 		String path = parsedUrl.getPath().isEmpty() ? this.DEFAULT_PATH : parsedUrl.getPath();
+		path += query != null ? "?" + query : "";
 		int port = url.startsWith("https") ? this.HTTPS_PORT : this.HTTP_PORT;
 		
 		boolean isConType = false;
