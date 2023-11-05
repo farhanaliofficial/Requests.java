@@ -4,7 +4,7 @@ package com.farhanali.requests;
 Author => Farhan Ali
 GitHub => https://github.com/farhanaliofficial/Requests.java
 Created Date => 07/10/2023
-Last Update => 04/11/2023
+Last Update => 05/11/2023
 */
 
 import java.net.URL;
@@ -24,7 +24,7 @@ public class Requests{
 	private String HTTP_POST = "POST";
 	private String HTTP_GET = "GET";
 	private String DEFAULT_PATH = "/";
-	private String VERSION = "1.0.2";
+	private String VERSION = "1.0.3";
 	private String AUTHOR = "Farhan Ali";
 	private String GITHUB = "https://github.com/farhanaliofficial/Requests.java";
 	public static String TERMINATOR = "\r\n";
